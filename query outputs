@@ -1,0 +1,132 @@
+# Bank Transactions SQL Queries & Outputs
+
+## 1. View All Transactions
+### Query:
+```sql
+SELECT * FROM bank_transactions LIMIT 10;
+```
+### Expected Output:
+| transaction_id | customer_id | transaction_date | amount  | transaction_type | account_type | location | status |
+|---------------|------------|------------------|---------|------------------|-------------|----------|--------|
+| TXN001       | 1001       | 2024-01-15       | 500.00  | Credit           | Savings     | Delhi    | Success|
+| TXN002       | 1002       | 2024-01-16       | 12000.00| Debit            | Current     | Mumbai   | Success|
+| TXN003       | 1003       | 2024-01-17       | 7500.00 | Credit           | Savings     | Pune     | Failed |
+
+---
+
+## 2. Identify High-Value Transactions (Above ₹10,000)
+### Query:
+```sql
+SELECT * FROM bank_transactions WHERE amount > 10000 ORDER BY amount DESC;
+```
+### Expected Output:
+| transaction_id | customer_id | amount  | transaction_type | location | status |
+|---------------|------------|---------|------------------|----------|--------|
+| TXN005       | 1004       | 50000.00| Credit           | Mumbai   | Success|
+| TXN002       | 1002       | 12000.00| Debit            | Mumbai   | Success|
+
+---
+
+## 3. Count Total Transactions
+### Query:
+```sql
+SELECT COUNT(*) AS total_transactions FROM bank_transactions;
+```
+### Expected Output:
+| total_transactions |
+|--------------------|
+| 5000              |
+
+---
+
+## 4. Count Unique Customers
+### Query:
+```sql
+SELECT COUNT(DISTINCT customer_id) AS total_customers FROM bank_transactions;
+```
+### Expected Output:
+| total_customers |
+|----------------|
+| 1200          |
+
+---
+
+## 5. Transactions from a Specific Location (Mumbai)
+### Query:
+```sql
+SELECT * FROM bank_transactions WHERE location = 'Mumbai';
+```
+### Expected Output:
+| transaction_id | customer_id | amount  | transaction_type | location | status |
+|---------------|------------|---------|------------------|----------|--------|
+| TXN002       | 1002       | 12000.00| Debit            | Mumbai   | Success|
+| TXN005       | 1004       | 50000.00| Credit           | Mumbai   | Success|
+
+---
+
+## 6. Find All ‘Failed’ Transactions
+### Query:
+```sql
+SELECT * FROM bank_transactions WHERE status = 'Failed';
+```
+### Expected Output:
+| transaction_id | customer_id | amount  | transaction_type | location | status |
+|---------------|------------|---------|------------------|----------|--------|
+| TXN003       | 1003       | 7500.00 | Credit           | Pune     | Failed |
+| TXN007       | 1005       | 1500.00 | Debit            | Bangalore| Failed |
+
+---
+
+## 7. Total Transactions for Each Transaction Type
+### Query:
+```sql
+SELECT transaction_type, COUNT(*) AS transaction_count FROM bank_transactions GROUP BY transaction_type;
+```
+### Expected Output:
+| transaction_type | transaction_count |
+|------------------|------------------|
+| Credit          | 2500             |
+| Debit           | 2500             |
+
+---
+
+## 8. Total Amount Transacted (Credit vs Debit)
+### Query:
+```sql
+SELECT transaction_type, SUM(amount) AS total_amount FROM bank_transactions GROUP BY transaction_type;
+```
+### Expected Output:
+| transaction_type | total_amount |
+|------------------|-------------|
+| Credit          | 50000000.00  |
+| Debit           | 45000000.00  |
+
+---
+
+## 9. Customers with the Most Transactions
+### Query:
+```sql
+SELECT customer_id, COUNT(*) AS total_transactions FROM bank_transactions GROUP BY customer_id ORDER BY total_transactions DESC LIMIT 5;
+```
+### Expected Output:
+| customer_id | total_transactions |
+|------------|--------------------|
+| 1050       | 300                |
+| 1022       | 250                |
+| 1098       | 200                |
+
+---
+
+## 10. Customers Who Made Transactions from Multiple Cities
+### Query:
+```sql
+SELECT customer_id, COUNT(DISTINCT location) AS unique_locations FROM bank_transactions GROUP BY customer_id HAVING unique_locations > 1;
+```
+### Expected Output:
+| customer_id | unique_locations |
+|------------|------------------|
+| 1012       | 3                |
+| 1045       | 2                |
+
+---
+
